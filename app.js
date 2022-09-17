@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
-// const db = require("./database/models");
+const db = require("./database/models");
 const errorHandler = require("./middlewares/errorHandler");
 const routes = require("./routes");
 // const { swaggerUi, specs } = require("./swagger/swagger");
@@ -13,14 +13,14 @@ const Redis = require("ioredis");
 const app = express();
 app.set("port", process.env.PORT);
 
-// db.sequelize
-//   .sync({ force: true })
-//   .then(async () => {
-//     console.log("Synced database.");
-//   })
-//   .catch((err) => {
-//     console.log("Failed to sync database: " + err.message);
-//   });
+db.sequelize
+  .sync({ force: true })
+  .then(async () => {
+    console.log("Synced database.");
+  })
+  .catch((err) => {
+    console.log("Failed to sync database: " + err.message);
+  });
 
 const redis = new Redis({
   port: process.env.REDIS_PORT,
