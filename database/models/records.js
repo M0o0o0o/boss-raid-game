@@ -18,11 +18,11 @@ module.exports = class Record extends Sequelize.Model {
           type: Sequelize.INTEGER,
           allowNull: false,
         },
-        enter_time: {
+        enterTime: {
           type: Sequelize.STRING(19),
           allowNull: false,
         },
-        end_time: {
+        endTime: {
           type: Sequelize.STRING(19),
           allowNull: false,
         },
