@@ -22,6 +22,10 @@ const enterBossRoom = async (userId, level, redis) => {
       return { isEntered: false };
     }
 
+    if (level > 3 || level < 1) {
+      throw new Error("레벨은 1~3까지만 선택 가능합니다.");
+    }
+
     const bossRoom = bossRoomDAO(userId, moment().valueOf(), level);
 
     // await redis.json.set("bossRoom", "$", bossRoom);
