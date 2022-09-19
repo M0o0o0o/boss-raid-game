@@ -11,4 +11,13 @@ const createUser = async (userId) => {
   }
 };
 
-module.exports = { createUser };
+const findUser = async (userId) => {
+  try {
+    return await User.findOne({ where: { userId } });
+  } catch (err) {
+    logger.error(err);
+    throw err;
+  }
+};
+
+module.exports = { createUser, findUser };
