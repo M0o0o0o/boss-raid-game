@@ -8,27 +8,19 @@ const errorHandler = require("./middlewares/errorHandler");
 const routes = require("./routes");
 // const { swaggerUi, specs } = require("./swagger/swagger");
 const errorCodes = require("./codes/errorCodes");
-const Redis = require("ioredis");
-
+const redisInit = require("./middlewares/redisInit");
+const setStaticData = require("./middlewares/setStaticData");
 const app = express();
 app.set("port", process.env.PORT);
 
 db.sequelize
-  .sync({ force: true })
+  .sync({ force: false })
   .then(async () => {
     console.log("Synced database.");
   })
   .catch((err) => {
     console.log("Failed to sync database: " + err.message);
   });
-
-const redis = new Redis({
-  port: process.env.REDIS_PORT,
-  host: process.env.REDIS_HOST,
-  username: "default",
-  password: process.env.REDIS_KEY,
-  db: 0,
-});
 
 app.use(cors());
 app.use(express.json());
@@ -42,6 +34,8 @@ if (process.env.NODE_ENV === "production") {
   app.use(morgan("dev"));
 }
 
+app.use(redisInit);
+app.use(setStaticData);
 app.use(routes);
 app.use((req, res) => {
   res.status(404).json({ message: errorCodes.pageNotFound });
