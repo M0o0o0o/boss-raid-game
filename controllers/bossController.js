@@ -19,7 +19,7 @@ const enterBossRoom = async (req, res, next) => {
     const { userId, level } = req.body;
     const redis = req.app.get("redis");
     const result = await bossService.enterBossRoom(userId, level, redis);
-    res.status(200).json(result);
+    res.status(201).json(result);
   } catch (err) {
     next(err);
   }
