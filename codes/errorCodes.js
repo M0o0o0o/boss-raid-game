@@ -8,5 +8,10 @@ module.exports = {
   EXCEEDLENGTH: (len) => `최대 ${len}자까지 입력해주세요.`,
   ONLYINT: "숫자만 입력해주세요",
   RETRY: "다시 시도해주세요",
-  NOTEXISTCATEGORY: "존재하지 않는 쿠폰 타입입니다.",
+  NOTSAME: (field) => `${field}이(가) 일치하지 않습니다.`,
+
+  // related by boss
+  NOTFOUNDUSER: "존재하지 않는 유저입니다.",
+  NOTFOUNDROOM: "보스 레이드에 입장한 유저가 없습니다.",
+  TIMEOUT: "시간 초과되었습니다.",
 };
