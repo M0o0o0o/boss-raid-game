@@ -39,12 +39,29 @@ const endBossRoom = async (req, res, next) => {
 
 const getRanking = async (req, res, next) => {
   try {
-    const { userId } = req.body;
-    const ranking = await bossService.getRanking(userId);
+    const redis = req.app.get("redis");
+    const ranking = await bossService.getRanking(redis);
     res.status(200).json(ranking);
   } catch (err) {
     next(err);
   }
 };
 
-module.exports = { getBossState, enterBossRoom, endBossRoom, getRanking };
+const getUserRanking = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+
+    const userRank = await bossService.getUserRanking(userId);
+    res.status(200).json(userRank);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = {
+  getBossState,
+  enterBossRoom,
+  endBossRoom,
+  getRanking,
+  getUserRanking,
+};

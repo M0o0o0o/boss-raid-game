@@ -62,4 +62,25 @@ const findRanking = async () => {
     throw err;
   }
 };
-module.exports = { findUserRecord, createRecord, findRanking };
+
+const findUserRanking = async (userId) => {
+  try {
+    const query = `
+    SELECT 
+    dense_rank() over(order by totalScore DESC) ranking, userId, totalScore
+    FROM
+    (SELECT fk_user_id userId, sum(score) totalScore FROM records GROUP BY fk_user_id) t
+    WHERE userId='${userId}';
+  `;
+    const ranking = await sequelize.query(query, {
+      type: sequelize.QueryTypes.SELECT,
+      raw: true,
+    });
+    return ranking;
+  } catch (err) {
+    logger.error(err);
+    throw err;
+  }
+};
+
+module.exports = { findUserRecord, createRecord, findRanking, findUserRanking };

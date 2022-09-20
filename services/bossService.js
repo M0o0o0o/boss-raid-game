@@ -86,9 +86,27 @@ const endBossRoom = async (raidRecordId, userId, redis) => {
 /**
  * @Tood 넘겨받은 userId가 존재하는지 확인 예외처리 구하기
  */
-const getRanking = async (userId) => {
+const getRanking = async (redis) => {
+  const storedRanking = await redis.json.get("ranking");
+  if (storedRanking) {
+    return storedRanking;
+  }
+
   const ranking = await recordRepository.findRanking();
+
+  await redis.json.set("ranking", "$", ranking);
   return ranking;
 };
 
-module.exports = { getBossState, enterBossRoom, endBossRoom, getRanking };
+const getUserRanking = async (userId) => {
+  const userRank = await recordRepository.findUserRanking(userId);
+  return userRank;
+};
+
+module.exports = {
+  getBossState,
+  enterBossRoom,
+  endBossRoom,
+  getRanking,
+  getUserRanking,
+};
