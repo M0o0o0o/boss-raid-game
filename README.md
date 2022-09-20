@@ -24,13 +24,41 @@
 
 ### ✔ 기능 설명
 
+- 유저
+
+  - 유저 생성 요청이 들어오면 중복되지 않는 고유한 userId를 리턴합니다.
+  - 유저 조회를 요청하면 해당 유저의 보스레이드 총 점수와 기록을 리턴합니다.
+
+- 보스
+
+  - 현재 보스방에 입장한 유저가 있는지 상태값을 리턴합니다.
+    - { canEnter, enteredUserId}
+  - 보스방에 입장한다는 요청이 들어왔을 경우 보스방에 상태를 확인한 후 아무도 없다면 입장이 가능하다는 값을 리턴합니다.
+  - 보스방 입장한 유저가 종료 요청을 보냅니다.
+
+- 보스방 관련 데이터
+  - 보스방에 초기 상태와 레벨, 시간 제한과 같은 데이터가 static하게 주여집니다.
+
 # ✅ 요구사항 분석
+
+- 주어진 기능 설명를 통해 도출된 요구사항 중 가장 중요한 기능은 보스방에는 한 명의 유저만 입장이 가능하다는 점입니다.
+- 보스방과 관련된 데이터는 레디스를 통해서만 관리하기 때문에 race condition이 발생할 수 있는 지점을 확인하고
+- 적절하게 처리하는 게 핵심이라고 생각합니다.
+
+# ✋ 트러블 슈팅
+
+프로젝트를 진행하면서 가장 중요하게 생각했던 부분은 보스방에는 단 한 명의 유저만 입장할 수 있다는 조건인데, 이를 위해서는 사용하는 환경에서 race condition이 발생할 수 있는 지부터 확인하는 것이 중요했습니다.
+node에서 동시성 관련 처리를 위해서 lock을 걸고 처리할 수 있지만, 적절하지 않을 것 같아서 redis에서 동시성 발생이 가능한 지, 가능하다면 어떻게 isolated하게 처리할 수 있는 지 찾아봤습니다.
+
+우선 레디스는 싱글 스레드 기반으로 동작하지만, 내부 동작 방식에 의해서 여러 클라이언트의 요청을 동시에 응답하는 동시성의 특징도 가지고 있다고 합니다. 즉, 여기까지 봤을 때 레디스에서도 충분히 동시성 이슈가 발생할 수 있기 때문에 분명이 이를 방지하는 기능도 있을 거라 생각했습니다.
+
+레디스 공식문서에 따르면 보통의 데이터베이스에서 트랜잭션을 통해 ACID를 보장하는데, 레디스로 트랜잭션을 제공하지만, MySql과 동일하지는 않지만, 트랜잭션(Watch, Multi, exec)을 제공하고 있습니다.
+
+그런데, 보스방에 상태를 확인하고 입장하는 과정에서는 단일 명령을 수행하기 때문에 트랜잭션을 열어서 여러 작업을 지시할 필요가 없기 때문에 사용하고 있는 node-redis에 공식문서(https://redis.io/docs/manual/transactions)를 참고해서 Isolated Execution를 보장받아 레디스에 접근할 수 있는 방식으로 해결했습니다.
 
 # 📑 API 문서
 
 # 📜 테스트 케이스
-
-<!-- <img width="1608" alt="스크린샷 2022-09-07 오후 1 41 44" src="https://user-images.githubusercontent.com/68809337/188790312-8e9520ab-1d2d-48db-96b0-45ca81afc828.png"> -->
 
 # 💡 컨벤션
 
@@ -76,27 +104,23 @@
 # 🗂 폴더 구조
 
 ```
-
-📦anonymous-community
+📦boss-raid-game
  ┣ 📂__test__
  ┣ 📂codes
- ┣ 📂controller
+ ┣ 📂controllers
  ┣ 📂dao
  ┣ 📂database
  ┃ ┣ 📂models
+ ┣ 📂logger
+ ┣ 📂logs
+ ┃ ┗ 📂error
  ┣ 📂middlewares
- ┣ 📂repository
+ ┣ 📂reposotires
  ┣ 📂routes
- ┣ 📂service
- ┣ 📂swagger
+ ┣ 📂services
  ┣ 📂validator
- ┣ 📂weatherapi
- ┃ ┗ 📜index.js
- ┣ 📜.eslintrc.json
- ┣ 📜.gitignore
- ┣ 📜.prettierrc.json
- ┣ 📜LICENSE
  ┣ 📜app.js
+ ┣ 📜package-lock.json
  ┣ 📜package.json
  ┗ 📜server.js
 ```
@@ -166,7 +190,3 @@
 <img src="https://img.shields.io/badge/Swagger-61DAFB?style=for-the-badge&logo=Swagger&logoColor=white"> <img src="https://img.shields.io/badge/Mocha-F8DC75?style=for-the-badge&logo=Mocha&logoColor=white">
 
 <!-- logger chai 추가 -->
-
-# ✋ 트러블 슈팅
-
-###
