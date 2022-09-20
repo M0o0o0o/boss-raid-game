@@ -2,6 +2,8 @@
 
 [요구사항 분석](#-요구사항-분석)
 
+[트러블 슈팅](#-트러블-슈팅)
+
 [API 문서](#-api-문서)
 
 [테스트 케이스](#-테스트-케이스)
@@ -15,8 +17,6 @@
 [패키지](#-패키지)
 
 [기술 스택](#-기술-스택)
-
-[역할분담 및 트러블 슈팅](#-역할분담-및-트러블-슈팅)
 
 # 🚩 Boss Raid Game
 
@@ -59,6 +59,7 @@ node에서 동시성 관련 처리를 위해서 lock을 걸고 처리할 수 있
 # 📑 API 문서
 
 # 📜 테스트 케이스
+<img width="942" alt="스크린샷 2022-09-20 오전 10 41 49" src="https://user-images.githubusercontent.com/68809337/191148711-7c4a2db6-586f-4ce7-bc91-193532b2647b.png">
 
 # 💡 컨벤션
 
@@ -98,8 +99,8 @@ node에서 동시성 관련 처리를 위해서 lock을 걸고 처리할 수 있
 [깃 커밋 컨벤션 참고 사이트](https://overcome-the-limits.tistory.com/entry/협업-협업을-위한-기본적인-git-커밋컨벤션-설정하기)
 
 # 🗝 ERD
+<img width="1046" alt="스크린샷 2022-09-20 오전 10 31 46" src="https://user-images.githubusercontent.com/68809337/191147643-b48e9138-a653-49f6-a1f3-f9e3beb20aba.png">
 
-<img width="391" alt="스크린샷 2022-09-07 오후 2 26 29" src="https://user-images.githubusercontent.com/68809337/188795669-5fe4f957-82fb-4523-b5e4-f558b7566c9a.png">
 
 # 🗂 폴더 구조
 
