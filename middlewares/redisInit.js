@@ -11,7 +11,6 @@ module.exports = async (req, res, next) => {
   });
 
   redis.on("error", (err) => {
-    console.log("Redis Client Error", err);
     req.app.set("redis", null);
     next();
   });
