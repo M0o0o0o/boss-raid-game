@@ -6,6 +6,8 @@ const morgan = require("morgan");
 const db = require("./database/models");
 const errorHandler = require("./middlewares/errorHandler");
 const routes = require("./routes");
+const nodeCron = require("node-cron");
+
 // const { swaggerUi, specs } = require("./swagger/swagger");
 const errorCodes = require("./codes/errorCodes");
 const redisInit = require("./middlewares/redisInit");
@@ -36,6 +38,9 @@ if (process.env.NODE_ENV === "production") {
 
 app.use(redisInit);
 app.use(setStaticData);
+nodeCron.schedule("45 23 * * *", async () => {
+  app.use(redisRankingData);
+});
 app.use(routes);
 app.use((req, res) => {
   res.status(404).json({ message: errorCodes.pageNotFound });

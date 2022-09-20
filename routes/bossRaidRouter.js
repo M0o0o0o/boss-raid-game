@@ -21,4 +21,6 @@ router.patch("/end", bossEndValidator(), bossController.endBossRoom);
 //보스레이드 랭킹 조회
 router.get("/topRankerList", bossController.getRanking);
 
+router.get("/rank/:userId", bossController.getUserRanking);
+
 module.exports = router;
